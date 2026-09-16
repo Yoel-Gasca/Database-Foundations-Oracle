@@ -2,4 +2,4 @@
 
 ![alt text](./Img/image.png)
 
- En el presente repocitorio se recopila contenido del curso **Database Foundations - Español de Oracle Academy**, en el cual se abordan en los principios teóricos de las bases de datos y aplicaciones prácticas🌈✨
+ En el presente repocitorio se recopila contenido del curso **Database Foundations - Español de Oracle Academy**, en el cual se abordan los principios teóricos de las bases de datos y aplicaciones prácticas🌈✨
