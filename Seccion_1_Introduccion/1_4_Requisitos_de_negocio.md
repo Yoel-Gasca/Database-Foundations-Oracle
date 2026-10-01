@@ -28,6 +28,7 @@
 Se trata de un archivo plano que almacena información sobre los alumnos, los deportes que hayan seleccionad y el precio de cada deporte seleccionado. Este escenario garantiza la necesidad de una base de datos relacional.
 
 **Posible solución de la base de datos**
+
 ![alt text](../Img/1_4_Posible_solucion.png)
 
 **Importancia de las reglas de negocio**
