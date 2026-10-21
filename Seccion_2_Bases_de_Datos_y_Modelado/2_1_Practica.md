@@ -214,6 +214,196 @@ Tiempo_Estimado	Tiempo estimado de entrega
 
 Asimismo, por seguridad, no conviene almacenar directamente el número completo de la tarjeta bancaria. Es preferible utilizar un proveedor de pagos y guardar su referencia o token, además del estado de la transacción.
 
+**Caso 2: ABC Ltd**
+
+Un aspecto importante del escenario es que un pedido puede incluir varios productos, una entrega puede cubrir solo parte del pedido y un pago puede corresponder a varias facturas o cubrir únicamente una parte de ellas. Por eso, necesitamos tablas relacionadas y no una sola tabla que contenga toda la información.
+
+1. Tablas y campos asociados
+
+**A. Clientes y pedidos de venta**
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Cliente_ID (PK)| Identificador único del cliente|
+|Nombre	| Nombre o razón social|
+|Direccion|	Dirección del cliente|
+|Telefono| Número de teléfono|
+|Email|	Correo electrónico|
+
+2. PEDIDO_VENTA
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Pedido_ID (PK)| Identificador del pedido|
+|Cliente_ID (FK)| Cliente que realiza el pedido|
+|Fecha_Pedido|	Fecha de recepción|
+|Estado_Pedido|	Pendiente, parcial, completado o cancelado|
+
+
+3. DETALLE_PEDIDO
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Pedido_ID (PK, FK)| Pedido correspondiente|
+|Producto_ID (PK, FK)| Producto solicitado|
+|Cantidad_Solicitada| Cantidad que solicita el cliente|
+|Precio_Unitario| Precio de venta acordado|
+
+La tabla DETALLE_PEDIDO permite que un mismo pedido contenga varios productos y cantidades diferentes.
+
+**B. Productos, stock y proveedores**
+
+4. PRODUCTO
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Producto_ID (PK)|	Identificador único del producto|
+|Nombre| Nombre del producto|
+|Descripcion| Detalles del producto|
+|Precio_Venta| Precio de venta|
+|Proveedor_Preferido_ID (FK)| Proveedor habitual|
+|Cantidad_Stock| Cantidad disponible en inventario|
+|Nivel_Reorden|	Nivel que activa la reposición|
+
+5. PROVEEDOR
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Proveedor_ID (PK)|	Identificador del proveedor|
+|Nombre|	Nombre o razón social|
+|Direccion|	Dirección del proveedor|
+|Telefono|	Número de contacto|
+|Email|	Correo electrónico|
+
+El escenario indica que cada producto tiene un proveedor preferido, pero también permite comprar a proveedores alternativos. Por eso, conviene registrar por separado los proveedores y relacionarlos con los pedidos de compra.
+
+**C. Reposición de inventario y pedidos a proveedores**
+
+6. PEDIDO_COMPRA
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Pedido_Compra_ID (PK)|	Identificador del pedido al proveedor|
+|Proveedor_ID (FK)|	Proveedor al que se solicita el producto|
+|Fecha_Pedido|	Fecha de solicitud|
+|Estado| Solicitado, recibido, parcial o cancelado|
+
+7. DETALLE_PEDIDO_COMPRA
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Pedido_Compra_ID (PK, FK)|	Pedido de compra|
+|Producto_ID (PK, FK)|	Producto solicitado|
+|Cantidad_Solicitada|	Cantidad requerida|
+|Costo_Unitario|	Costo acordado con el proveedor|
+|Cantidad_Recibida | Cantidad que ha llegado|
+
+8. PEDIDO_PENDIENTE
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Pendiente_ID (PK)|	Identificador del registro pendiente|
+|Pedido_ID (FK)|	Pedido original del cliente|
+|Producto_ID (FK)|	Producto que falta|
+|Cantidad_Pendiente|	Cantidad aún no entregada|
+|Estado|	Pendiente, solicitado al proveedor o surtido|
+
+La tabla PEDIDO_PENDIENTE permite llevar un control de los artículos que ABC no puede entregar inmediatamente. Cuando el producto vuelve a estar disponible, se puede actualizar la cantidad pendiente y completar la entrega.
+
+**D. Entregas y facturación**
+
+9. ENTREGA
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Entrega_ID (PK)| Identificador de la entrega|
+|Pedido_ID (FK)| Pedido del cliente|
+|Fecha_Entrega|	Fecha de envío o entrega|
+|Estado_Entrega| Preparada, enviada o entregada|
+
+
+10. DETALLE_ENTREGA
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Entrega_ID (PK, FK)|	Entrega correspondiente|
+|Producto_ID (PK, FK)| Producto entregado|
+|Cantidad_Entregada|	Unidades incluidas en la entrega|
+
+
+11. FACTURA
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Factura_ID (PK)| Identificador de la factura|
+|Cliente_ID (FK)| Cliente facturado|
+|Fecha_Factura|	Fecha de emisión|
+|Importe_Total|	Importe facturado|
+|Estado| Pendiente, parcial o pagada|
+
+
+12. DETALLE_FACTURA
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Factura_ID (PK, FK)|	Factura correspondiente|
+|Producto_ID (PK, FK)|	Producto facturado|
+|Cantidad|	Unidades facturadas|
+|Precio_Unitario|	Precio aplicado|
+|Importe_Linea|	Total de la línea|
+
+Esta estructura contempla que los productos se facturan conforme se envían. Un pedido podría tener varias entregas y, si la política de ABC lo permite, varias facturas. Por ejemplo, si el cliente solicita 20 unidades y solo hay 12 en stock, ABC podría entregar y facturar 12 unidades y dejar las otras 8 pendientes.
+
+**E. Pagos y facturas**
+
+Este es uno de los puntos más importantes del caso: el escenario establece que un pago puede cubrir una factura completa, varias facturas o solo una parte de una factura.
+
+13. PAGO
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Pago_ID (PK)|	Identificador del pago|
+|Cliente_ID (FK)|	Cliente que realiza el pago|
+|Fecha_Pago|	Fecha de recepción|
+|Importe_Total|	Importe total recibido|
+|Metodo_Pago|	Transferencia, tarjeta, etc.|
+|Referencia_Pago|	Referencia de la operación|
+
+
+14. APLICACION_PAGO
+
+| **Campo** | **Descripción** |
+|------|------------|
+|Pago_ID (PK, FK)|	Pago recibido|
+|Factura_ID (PK, FK)|	Factura a la que se aplica|
+|Importe_Aplicado|	Parte del pago destinada a esa factura|
+
+La tabla APLICACION_PAGO resuelve una relación de muchos a muchos:
+- Un pago puede distribuirse entre varias facturas.
+- Una factura puede recibir varios pagos parciales.
+Por ejemplo, un pago de $1,000 podría aplicarse a dos facturas, destinando $600 a la primera y $400 a la segunda. También es posible que una factura de $1,500 reciba primero un pago de $500 y posteriormente otro de $1,000.
+
+**Relaciones principales**
+
+Estas son las relaciones que deberíamos considerar al elaborar el diagrama entidad-relación:
+- CLIENTE 1:N PEDIDO_VENTA: un cliente puede realizar varios pedidos.
+- PEDIDO_VENTA 1:N DETALLE_PEDIDO: un pedido puede incluir diferentes productos.
+- PRODUCTO 1:N DETALLE_PEDIDO: un producto puede aparecer en distintos pedidos.
+- PROVEEDOR 1:N PEDIDO_COMPRA: un proveedor puede recibir varios pedidos de compra.
+- PEDIDO_COMPRA 1:N DETALLE_PEDIDO_COMPRA: cada pedido de compra puede incluir varios productos.
+- PEDIDO_VENTA 1:N ENTREGA: un pedido puede completarse mediante varias entregas.
+- ENTREGA 1:N DETALLE_ENTREGA: una entrega puede contener diferentes productos.
+- CLIENTE 1:N FACTURA: un cliente puede recibir varias facturas.
+- FACTURA 1:N DETALLE_FACTURA: una factura puede incluir varios productos.
+- PAGO N:M FACTURA: un pago puede cubrir varias facturas y una factura puede recibir varios pagos, mediante APLICACION_PAGO.
+
+### Conclusión: 
+
+la idea central del ejercicio es identificar que cada entidad importante debe tener su propia tabla y que las relaciones de muchos a muchos necesitan tablas intermedias. Así, la base de datos puede almacenar la información sin duplicaciones innecesarias y gestionar correctamente el proceso de compra, desde la selección de los libros hasta la confirmación del pedido.
+
+En el caso de la base de datos relacional de ABC Ltd debe permitir administrar los clientes, los pedidos de venta, los productos, los proveedores, las entregas, las facturas y los pagos. Las tablas de detalle permiten registrar varios productos en cada pedido, compra, entrega o factura.
+
+#### Esta es la evidencia que corresponde a la <a href="/Seccion_2_Bases_de_Datos_y_Modelado/2_1_Practica.md">Practica</a> de la lección <a href="/Seccion_2_Bases_de_Datos_y_Modelado/2_1_Bases_de_Datos_relacionales.md"> 2.1 2.1: Bases de datos relacionales </a> del curso  Database Foundations de Oracle Academy.
 
 
 ![alt text](../Img/image.png)
