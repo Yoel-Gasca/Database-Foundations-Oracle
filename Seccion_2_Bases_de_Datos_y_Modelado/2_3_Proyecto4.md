@@ -1,0 +1,19 @@
+![alt text](../Img/image.png)
+
+# Proyecto de diseño de base de datos
+## Base de datos de la tienda Oracle Baseball League
+
+**Escenario del proyecto**:
+Usted es una pequeña empresa de consultoría especializada en el desarrollo de bases de datos. Le acaban de adjudicar un contrato para desarrollar un modelo de datos para un sistema de aplicaciones de bases de datos de una pequeña tienda denominada Oracle Baseball League (OBL). 
+
+La tienda ofrece servicios de venta de conjuntos de béisbol para toda la comunidad. OBL tiene dos tipos de cliente; hay personas que pueden adquirir artículos como pelotas, zapatillas, guantes, camisas, camisetas serigrafiadas y pantalones.Además, los clientes pueden representar a un equipo cuando adquieren uniformes y equipación conjunta.
+
+Los equipos y los clientes individuales son libres de comprar cualquier artículo de la lista de inventario, pero los equipos obtienen un descuento en el precio de lista según el número de jugadores. Cuando un cliente realiza un pedido, registramos los artículos de ese pedido en nuestra base de datos.
+
+El equipo de OBL cuenta con tres representantes de ventas que oficialmente solo atienden a equipos, pero se sabe que gestionan las quejas de los clientes individuales.
+
+## Sección 2, lección 3, ejercicio 4: Entidades y atributos
+
+**Uso de la notación de Barker (objetivo 4 de S2L3)**
+
+Utilice la notación de Barker para visualizar la información representada por las entidades y los atributos identificados. Para facilitar la comprensión de cada softbox, ponga los atributos en su orden lógico y coloque todos los atributos obligatorios antes de los opcionales.
