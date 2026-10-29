@@ -28,6 +28,9 @@
 
 ![alt text](../Img/2_4_IdentificadoresUnicos_Example.png)
 
+El UID puede ser portador de información cuando sus valores tienen algún significado de negocio. Un UID no portador de información en ocasiones se conoce como una clave artificial. Un UID portador de
+información en ocasiones se conoce como una clave natural.
+
 ## UID simples frente a UID compuestos
 - Un UID que es un solo atributo es un UID simple.
 - En algunas ocasiones, un único atributo no es suficiente para identificar de forma única una instancia de una entidad
@@ -76,11 +79,11 @@ una tabla
 
 **Llave primaria: Ejemplo**
 
-![alt text](../Img/2_4_llave_unica.png)
+![alt text](../Img/2_4_llave_primaria.png)
 
 **Llave primaria compuesta: Ejemplo**
 
-![alt text](../Img/2_4_llave_Compuesta_Example.png)
+![alt text](../Img/2_4_llave_primaria_Compuesta.png)
 
 ## Resumen
 - En esta lección, debe haber aprendido a hacer lo siguiente:
